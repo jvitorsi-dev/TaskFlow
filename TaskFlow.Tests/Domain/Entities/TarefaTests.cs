@@ -132,8 +132,8 @@ namespace TaskFlow.Tests.Domain.Entities
             Assert.Contains("concluída", excecao.Message);
         }
 
+        // null não entra aqui de propósito: titulo null mantém o valor atual (coberto por Editar_ValoresNulos_MantemValoresAtuais)
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
         [InlineData("ab")] // menos de 3 caracteres
@@ -155,8 +155,8 @@ namespace TaskFlow.Tests.Domain.Entities
             Assert.Contains("entre 3 e 100 caracteres", excecao.Message);
         }
 
+        // null não entra aqui de propósito: descricao null mantém o valor atual
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("  ")]
         public void Editar_DescricaoInvalida_LancaDomainException(string descricao)
