@@ -27,7 +27,28 @@ jobs:
         run: dotnet build TaskFlow.slnx --configuration Release --no-restore
 
       - name: Executar testes
-        run: dotnet test TaskFlow.Tests/TaskFlow.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test TaskFlow.Tests/TaskFlow.Tests.csproj --configuration Release --no-build --logger "console;verbosity=normal" --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publicar falhas como anotações
+        if: failure()
+        shell: bash
+        run: |
+          python3 - <<'EOF'
+          import glob
+          import xml.etree.ElementTree as ET
+
+          ns = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
+          for trx in glob.glob("TaskFlow.Tests/TestResults/*.trx"):
+              root = ET.parse(trx).getroot()
+              for ut in root.findall(".//t:UnitTestResult", ns):
+                  if ut.get("outcome") != "Failed":
+                      continue
+                  name = ut.get("testName", "teste sem nome")
+                  msg_el = ut.find(".//t:Message", ns)
+                  msg = (msg_el.text or "").strip() if msg_el is not None else ""
+                  first = msg.splitlines()[0][:250] if msg else "falhou sem mensagem"
+                  print(f"::error title=Teste falhou::{name} — {first}")
+          EOF
 
       - name: Publicar resultados dos testes
         if: always()
