@@ -1,0 +1,38 @@
+name: CI - Build e Testes
+
+on:
+  push:
+    branches: [master, "arena/**"]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-e-testes:
+    name: Build e Testes (.NET 10)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restaurar dependências
+        run: dotnet restore TaskFlow.slnx
+
+      - name: Build
+        run: dotnet build TaskFlow.slnx --configuration Release --no-restore
+
+      - name: Executar testes
+        run: dotnet test TaskFlow.Tests/TaskFlow.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publicar resultados dos testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-testes
+          path: TaskFlow.Tests/TestResults/
+          if-no-files-found: ignore
