@@ -12,7 +12,7 @@ namespace TaskFlow.Domain.Entities
         public string Email { get; private set; } = string.Empty;
         public string Senha { get; private set; } = string.Empty;
         private readonly List<Projeto> _projetos = new List<Projeto>();
-        public IReadOnlyCollection<Projeto> Projetos { get; private set; } = new List<Projeto>();
+        public IReadOnlyCollection<Projeto> Projetos => _projetos.AsReadOnly();
 
         public Usuario() { } // Construtor privado para Entity Framework
 
@@ -31,6 +31,9 @@ namespace TaskFlow.Domain.Entities
 
         public void AdicionarProjeto(Projeto projeto)
         {
+            if (projeto is null)
+                throw new DomainException("O projeto não pode ser nulo.");
+
             _projetos.Add(projeto);
         }
 
@@ -41,11 +44,15 @@ namespace TaskFlow.Domain.Entities
 
         public void Editar(string? nome, string? email, string? senha)
         {
-            Validar(nome, email, senha);
+            var novoNome = nome ?? Nome;
+            var novoEmail = email ?? Email;
+            var novaSenha = senha ?? Senha;
 
-            Nome = nome ?? Nome;
-            Email = email ?? Email;
-            Senha = senha ?? Senha;
+            Validar(novoNome, novoEmail, novaSenha);
+
+            Nome = novoNome;
+            Email = novoEmail;
+            Senha = novaSenha;
         }
 
         public void Validar(string? nome, string? email, string? senha)

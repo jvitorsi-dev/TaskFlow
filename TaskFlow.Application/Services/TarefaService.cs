@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TaskFlow.Application.Interfaces;
 using TaskFlow.Application.Projetos.Commands;
 using TaskFlow.Application.Projetos.DTOs;
 using TaskFlow.Application.Projetos.UseCases;
@@ -10,7 +11,7 @@ using TaskFlow.Application.Tarefas.UseCases;
 
 namespace TaskFlow.Application.Services
 {
-    public class TarefaService
+    public class TarefaService : ITarefaService
     {
         private readonly AdicionarTarefaUseCase _criar;
         private readonly BuscarTarefaUseCase _buscar;

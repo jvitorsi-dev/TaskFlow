@@ -20,6 +20,8 @@ namespace TaskFlow.Domain.Entities
 
         public Tarefa(string titulo, string descricao, PrioridadeTarefa prioridade)
         {
+            Validar(titulo, descricao);
+
             Titulo = titulo;
             Descricao = descricao;
             Prioridade = prioridade;

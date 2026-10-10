@@ -23,10 +23,10 @@ public class ProjetoController : ControllerBase
         return Ok(projetos);
     }
 
-    [HttpGet("{idProjeto}/{idUsuario}")]
-    public async Task<ActionResult<ProjetoDTO>> ObterPorId(int idProjeto, int idUsuario)
+    [HttpGet("{idUsuario}/{idProjeto}")]
+    public async Task<ActionResult<ProjetoDTO>> ObterPorId(int idUsuario, int idProjeto)
     {
-        var command = new BuscarProjetoCommand(idProjeto, idUsuario);
+        var command = new BuscarProjetoCommand(idUsuario, idProjeto);
         var projeto = await _projetoService.ObterProjetoPorIdAsync(command);
 
         if (projeto is null)
