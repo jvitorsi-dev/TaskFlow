@@ -26,6 +26,7 @@ namespace TaskFlow.Application.Projetos.UseCases
 
             return new ProjetoDTO(
                 projeto.Id,
+                projeto.UsuarioId,
                 projeto.Nome,
                 projeto.Descricao,
                 projeto.Status,

@@ -14,7 +14,7 @@ namespace TaskFlow.Domain.Entities
         private readonly List<Projeto> _projetos = new List<Projeto>();
         public IReadOnlyCollection<Projeto> Projetos => _projetos.AsReadOnly();
 
-        public Usuario() { } // Construtor privado para Entity Framework
+        private Usuario() { } // Construtor privado para Entity Framework
 
         public Usuario(string nome, string email, string senha)
         {

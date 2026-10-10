@@ -8,6 +8,7 @@ namespace TaskFlow.Application.Projetos.DTOs
 {
     public record ProjetoDTO(
         int Id,
+        int UsuarioId,
         string Nome,
         string Descricao,
         StatusProjeto Status,

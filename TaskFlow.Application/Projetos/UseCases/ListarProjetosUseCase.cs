@@ -20,6 +20,7 @@ namespace TaskFlow.Application.Projetos.UseCases
             return projetos.Select(p => new ProjetoDTO
             (
                 p.Id,
+                p.UsuarioId,
                 p.Nome,
                 p.Descricao,
                 p.Status,

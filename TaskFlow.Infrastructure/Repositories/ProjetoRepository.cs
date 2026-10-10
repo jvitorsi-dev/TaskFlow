@@ -26,7 +26,7 @@ namespace TaskFlow.Infrastructure.Repositories
 
         public async Task<IEnumerable<Projeto>> ListarTodosAsync()
         {
-            return await _context.Projetos.ToListAsync();
+            return await _context.Projetos.Include(p => p.Tarefas).ToListAsync();
         }
 
         public async Task EditarAsync(Projeto projeto)

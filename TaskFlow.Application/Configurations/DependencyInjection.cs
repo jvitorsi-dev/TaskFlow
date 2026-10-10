@@ -21,7 +21,6 @@ namespace TaskFlow.Application.Configurations
                 .WithScopedLifetime());
 
             // Services
-            // Services
             services.Scan(scan => scan
                 .FromAssemblies(assembly)
                 .AddClasses(classes => classes.Where(type =>

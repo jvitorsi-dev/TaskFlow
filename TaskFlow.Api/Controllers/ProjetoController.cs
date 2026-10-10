@@ -62,7 +62,7 @@ public class ProjetoController : ControllerBase
     [HttpDelete("{idProjeto}/{idUsuario}")]
     public async Task<IActionResult> Excluir(int idProjeto, int idUsuario)
     {
-        var command = new BuscarProjetoCommand(idProjeto, idUsuario);
+        var command = new BuscarProjetoCommand(idUsuario, idProjeto);
         await _projetoService.ExcluirProjetoAsync(command);
 
         return NoContent();
