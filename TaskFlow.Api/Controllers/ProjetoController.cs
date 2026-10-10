@@ -69,7 +69,7 @@ public class ProjetoController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("iniciar/{idUsuario}/{idProjeto}")]
+    [HttpPost("iniciar/{idUsuario}/{idProjeto}")]
     public async Task<IActionResult> IniciarProjeto(int idUsuario, int idProjeto)
     {
         var command = new BuscarProjetoCommand(idUsuario, idProjeto);
@@ -78,7 +78,7 @@ public class ProjetoController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("concluir/{idUsuario}/{idProjeto}")]
+    [HttpPost("concluir/{idUsuario}/{idProjeto}")]
     public async Task<IActionResult> ConcluirProjeto(int idUsuario, int idProjeto)
     {
         var command = new BuscarProjetoCommand(idUsuario, idProjeto);

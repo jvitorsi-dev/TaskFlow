@@ -26,7 +26,7 @@ namespace TaskFlow.Tests.Application.Projetos
             _projetoRepository.ObterPorIdAsync(10, 1).Returns(Task.FromResult<Projeto>(null));
             var command = new BuscarProjetoCommand(UsuarioId: 1, ProjetoId: 10);
 
-            await Assert.ThrowsAsync<NotFoundException>(() => _useCase.ConcluirProjeto(command));
+            await Assert.ThrowsAsync<NotFoundException>(() => _useCase.ExecuteAsync(command));
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace TaskFlow.Tests.Application.Projetos
             _projetoRepository.ObterPorIdAsync(10, 1).Returns(Task.FromResult(projeto));
             var command = new BuscarProjetoCommand(UsuarioId: 1, ProjetoId: 10);
 
-            await _useCase.ConcluirProjeto(command);
+            await _useCase.ExecuteAsync(command);
 
             Assert.Equal(StatusProjeto.Concluido, projeto.Status);
             await _unitOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());
@@ -50,7 +50,7 @@ namespace TaskFlow.Tests.Application.Projetos
             _projetoRepository.ObterPorIdAsync(10, 1).Returns(Task.FromResult(projeto));
             var command = new BuscarProjetoCommand(UsuarioId: 1, ProjetoId: 10);
 
-            await Assert.ThrowsAsync<DomainException>(() => _useCase.ConcluirProjeto(command));
+            await Assert.ThrowsAsync<DomainException>(() => _useCase.ExecuteAsync(command));
 
             await _unitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
         }

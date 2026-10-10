@@ -20,7 +20,7 @@ namespace TaskFlow.Tests.Api.Controllers
         }
 
         private static ProjetoDTO CriarDto()
-            => new(1, "Projeto de Testes", "Descrição do projeto",
+            => new(1, 1, "Projeto de Testes", "Descrição do projeto",
                    StatusProjeto.Planejado, DataCriacao: default, Tarefas: new List<TarefaDTO>());
 
         [Fact]
