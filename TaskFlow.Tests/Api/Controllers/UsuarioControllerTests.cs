@@ -71,7 +71,7 @@ namespace TaskFlow.Tests.Api.Controllers
         {
             var resultado = await _controller.Excluir(1);
 
-            Assert.IsType<NoContentResult>(resultado);
+            Assert.IsType<OkResult>(resultado);
             await _usuarioService.Received(1).ExcluirUsuarioAsync(1);
         }
     }
