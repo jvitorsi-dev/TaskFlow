@@ -14,5 +14,7 @@ namespace TaskFlow.Application.Interfaces
         Task<ProjetoDTO> AdicionarProjetoAsync(AdicionarProjetoCommand projeto);
         Task<ProjetoDTO> EditarProjetoAsync(EditarProjetoCommand projeto);
         Task ExcluirProjetoAsync(BuscarProjetoCommand projeto);
+        Task IniciarProjeto(BuscarProjetoCommand command);
+        Task ConcluirProjeto(BuscarProjetoCommand command);
     }
 }

@@ -19,7 +19,7 @@ namespace TaskFlow.Application.Projetos.UseCases
             _projetoRepository = projetoRepository;
         }
 
-        public async Task IniciarProjeto(BuscarProjetoCommand command)
+        public async Task ExecuteAsync(BuscarProjetoCommand command)
         {
             var projeto = await _projetoRepository.ObterPorIdAsync(command.ProjetoId, command.UsuarioId)
                 ?? throw new NotFoundException($"Projeto com Id {command.ProjetoId} não encontrado.");

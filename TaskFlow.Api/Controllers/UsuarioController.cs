@@ -55,6 +55,6 @@ public class UsuarioController : ControllerBase
     {
         await _usuarioService.ExcluirUsuarioAsync(usuarioId);
 
-        return NoContent();
+        return Ok();
     }
 }

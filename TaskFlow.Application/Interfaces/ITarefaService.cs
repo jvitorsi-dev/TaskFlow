@@ -12,5 +12,7 @@ namespace TaskFlow.Application.Interfaces
         Task<TarefaDTO> ObterTarefaPorIdAsync(BuscarTarefaCommand command);
         Task<TarefaDTO> EditarTarefaAsync(EditarTarefaCommand request);
         Task ExcluirTarefaAsync(BuscarTarefaCommand command);
+        Task IniciarTarefa(BuscarTarefaCommand command);
+        Task ConcluirTarefa(BuscarTarefaCommand command);
     }
 }

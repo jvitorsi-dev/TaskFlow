@@ -16,7 +16,8 @@ public class TarefaController : ControllerBase
     }
 
     [HttpGet("{idUsuario}/{idProjeto}/{idTarefa}")]
-    public async Task<ActionResult<TarefaDTO>> ObterPorId(int idUsuario, int idProjeto, int idTarefa)
+    public async Task<ActionResult<TarefaDTO>> ObterPorId(
+        int idUsuario, int idProjeto, int idTarefa)
     {
         var command = new BuscarTarefaCommand(idUsuario, idProjeto, idTarefa);
         var tarefa = await _tarefaService.ObterTarefaPorIdAsync(command);
@@ -52,11 +53,32 @@ public class TarefaController : ControllerBase
     }
 
     [HttpDelete("{idUsuario}/{idProjeto}/{idTarefa}")]
-    public async Task<IActionResult> Excluir(int idUsuario, int idProjeto, int idTarefa)
+    public async Task<IActionResult> Excluir(
+        int idUsuario, int idProjeto, int idTarefa)
     {
         var command = new BuscarTarefaCommand(idUsuario, idProjeto, idTarefa);
         await _tarefaService.ExcluirTarefaAsync(command);
 
         return NoContent();
+    }
+
+    [HttpPost("iniciar/{idUsuario}/{idProjeto}/{idTarefa}")]
+    public async Task<IActionResult> IniciarTarefa(
+        int idUsuario, int idProjeto, int idTarefa)
+    {
+        var command = new BuscarTarefaCommand(idUsuario, idProjeto, idTarefa);
+        await _tarefaService.IniciarTarefa(command);
+
+        return Ok();
+    }
+
+    [HttpPost("concluir/{idUsuario}/{idProjeto}/{idTarefa}")]
+    public async Task<IActionResult> ConcluirTarefa(
+        int idUsuario, int idProjeto, int idTarefa)
+    {
+        var command = new BuscarTarefaCommand(idUsuario, idProjeto, idTarefa);
+        await _tarefaService.ConcluirTarefa(command);
+
+        return Ok();
     }
 }

@@ -10,19 +10,25 @@ public class ProjetoService : IProjetoService
     private readonly EditarProjetoUseCase _editar;
     private readonly ExcluirProjetoUseCase _excluir;
     private readonly ListarProjetosUseCase _listar;
+    private readonly IniciarProjetoUseCase _iniciar;
+    private readonly ConcluirProjetoUseCase _concluir;
 
     public ProjetoService(
         AdicionarProjetoUseCase criar,
         BuscarProjetoUseCase buscar,
         EditarProjetoUseCase editar,
         ExcluirProjetoUseCase excluir,
-        ListarProjetosUseCase listar)
+        ListarProjetosUseCase listar,
+        IniciarProjetoUseCase iniciar,
+        ConcluirProjetoUseCase concluir)
     {
         _criar = criar;
         _buscar = buscar;
         _editar = editar;
         _excluir = excluir;
         _listar = listar;
+        _iniciar = iniciar;
+        _concluir = concluir;   
     }
 
     public Task<ProjetoDTO> AdicionarProjetoAsync(AdicionarProjetoCommand request)
@@ -39,4 +45,10 @@ public class ProjetoService : IProjetoService
 
     public Task<IEnumerable<ProjetoDTO>> ListarTodosProjetosAsync()
         => _listar.ExecuteAsync();
+
+    public Task IniciarProjeto(BuscarProjetoCommand command)
+        => _iniciar.ExecuteAsync(command);
+
+    public Task ConcluirProjeto(BuscarProjetoCommand command)
+        => _concluir.ExecuteAsync(command);
 }

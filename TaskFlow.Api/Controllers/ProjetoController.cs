@@ -60,11 +60,30 @@ public class ProjetoController : ControllerBase
     }
 
     [HttpDelete("{idProjeto}/{idUsuario}")]
-    public async Task<IActionResult> Excluir(int idProjeto, int idUsuario)
+    public async Task<IActionResult> Excluir(
+        int idProjeto, int idUsuario)
     {
         var command = new BuscarProjetoCommand(idUsuario, idProjeto);
         await _projetoService.ExcluirProjetoAsync(command);
 
         return NoContent();
+    }
+
+    [HttpGet("iniciar/{idUsuario}/{idProjeto}")]
+    public async Task<IActionResult> IniciarProjeto(int idUsuario, int idProjeto)
+    {
+        var command = new BuscarProjetoCommand(idUsuario, idProjeto);
+        await _projetoService.IniciarProjeto(command);
+
+        return Ok();
+    }
+
+    [HttpGet("concluir/{idUsuario}/{idProjeto}")]
+    public async Task<IActionResult> ConcluirProjeto(int idUsuario, int idProjeto)
+    {
+        var command = new BuscarProjetoCommand(idUsuario, idProjeto);
+        await _projetoService.ConcluirProjeto(command);
+
+        return Ok();
     }
 }
