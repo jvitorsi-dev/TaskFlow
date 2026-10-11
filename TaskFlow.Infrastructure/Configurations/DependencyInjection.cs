@@ -15,7 +15,8 @@ namespace TaskFlow.Infrastructure.Configurations
     {
         public static IServiceCollection AddTaskFlowInfrastructure(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            Action<IBusRegistrationConfigurator>? configurarConsumers = null)
         {
             // Banco de dados 
             services.AddDbContext<TaskFlowDbContext>(options =>
@@ -29,10 +30,24 @@ namespace TaskFlow.Infrastructure.Configurations
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Mensageria (MassTransit + RabbitMQ)
+            services.AddTaskFlowMessaging(configuration);
+
+            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddTaskFlowMessaging(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            Action<IBusRegistrationConfigurator>? configurarConsumers = null)
+        {
             services.AddMassTransit(x =>
             {
-                // nomes de fila legíveis, ex.: "tarefa-concluida"
                 x.SetKebabCaseEndpointNameFormatter();
+
+                // Quem chamar este método pode registrar consumers aqui
+                configurarConsumers?.Invoke(x);
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -45,7 +60,7 @@ namespace TaskFlow.Infrastructure.Configurations
                             h.Password(configuration["RabbitMQ:Password"] ?? "guest");
                         });
 
-                    // cria automaticamente as filas dos consumers registrados 
+                    // Cria uma fila para cada consumer registrado e liga essa fila à exchange do evento
                     cfg.ConfigureEndpoints(context);
                 });
             });
@@ -54,6 +69,7 @@ namespace TaskFlow.Infrastructure.Configurations
 
             return services;
         }
+
         public static IServiceCollection AddTaskFlowRepositories(
        this IServiceCollection services)
         {
