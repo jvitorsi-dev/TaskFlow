@@ -1,5 +1,7 @@
 using NSubstitute;
+using TaskFlow.Application.Interfaces;
 using TaskFlow.Application.Tarefas.Commands;
+using TaskFlow.Application.Tarefas.Events;
 using TaskFlow.Application.Tarefas.UseCases;
 using TaskFlow.Domain.Entities;
 using TaskFlow.Domain.Enums;
@@ -13,11 +15,13 @@ namespace TaskFlow.Tests.Application.Tarefas
     {
         private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly IProjetoRepository _projetoRepository = Substitute.For<IProjetoRepository>();
+        private readonly IEventPublisher _eventPublisher = Substitute.For<IEventPublisher>();
+
         private readonly ConcluirTarefaUseCase _useCase;
 
         public ConcluirTarefaUseCaseTests()
         {
-            _useCase = new ConcluirTarefaUseCase(_unitOfWork, _projetoRepository);
+            _useCase = new ConcluirTarefaUseCase(_unitOfWork, _projetoRepository, _eventPublisher);
         }
 
         [Fact]
@@ -27,6 +31,8 @@ namespace TaskFlow.Tests.Application.Tarefas
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await Assert.ThrowsAsync<NotFoundException>(() => _useCase.ExecuteAsync(command));
+            await _eventPublisher.DidNotReceive().PublishAsync(
+                Arg.Any<TarefaConcluidaEvent>(), Arg.Any<CancellationToken>());
         }
 
         [Fact]
@@ -53,6 +59,23 @@ namespace TaskFlow.Tests.Application.Tarefas
             await Assert.ThrowsAsync<DomainException>(() => _useCase.ExecuteAsync(command));
 
             await _unitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
+            await _eventPublisher.DidNotReceive().PublishAsync(
+                Arg.Any<TarefaConcluidaEvent>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_Valido_PublicaTarefaConcluidaEvent()
+        {
+            var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
+            tarefa.Iniciar();
+            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
+
+            await _useCase.ExecuteAsync(command);
+
+            await _eventPublisher.Received(1).PublishAsync(
+                Arg.Is<TarefaConcluidaEvent>(e => e.UsuarioId == 1 && e.Titulo == "Tarefa 1"),
+                Arg.Any<CancellationToken>());
         }
     }
 }
