@@ -77,5 +77,23 @@ namespace TaskFlow.Tests.Application.Tarefas
                 Arg.Is<TarefaConcluidaEvent>(e => e.UsuarioId == 1 && e.Titulo == "Tarefa 1"),
                 Arg.Any<CancellationToken>());
         }
+
+        [Fact]
+        public async Task ExecuteAsync_Valido_PublicaAntesDoCommit()
+        {
+            var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
+            tarefa.Iniciar();
+            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
+
+            await _useCase.ExecuteAsync(command);
+
+            // Com o Outbox, o publish PRECISA vir antes do commit
+            Received.InOrder(() =>
+            {
+                _eventPublisher.PublishAsync(Arg.Any<TarefaConcluidaEvent>(), Arg.Any<CancellationToken>());
+                _unitOfWork.CommitAsync(Arg.Any<CancellationToken>());
+            });
+        }
     }
 }

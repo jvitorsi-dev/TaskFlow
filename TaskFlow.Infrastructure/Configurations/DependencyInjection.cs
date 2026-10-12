@@ -44,6 +44,15 @@ namespace TaskFlow.Infrastructure.Configurations
             {
                 x.SetKebabCaseEndpointNameFormatter();
 
+                // OUTBOX: o Publish passa a gravar a mensagem no banco (tabela OutboxMessage),
+                // na mesma transação do SaveChanges. Um serviço em segundo plano entrega ao RabbitMQ.
+                x.AddEntityFrameworkOutbox<TaskFlowDbContext>(o =>
+                {
+                    o.UseSqlServer();                         // usa o SQL Server para os bloqueios
+                    o.UseBusOutbox();                         // aplica o outbox ao IPublishEndpoint
+                    o.QueryDelay = TimeSpan.FromSeconds(1);   // de quanto em quanto tempo procura mensagens pendentes
+                });
+
                 // Quem chamar este método pode registrar consumers aqui
                 configurarConsumers?.Invoke(x);
 

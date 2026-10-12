@@ -28,16 +28,19 @@ namespace TaskFlow.Application.Tarefas.UseCases
                 ?? throw new NotFoundException(
                     $"Tarefa com Id {command.TarefaId} não encontrada no projeto {command.ProjetoId}.");
 
-            tarefa.Concluir();              // 1. regra de negócio (pode lançar DomainException)
-            await _unitOfWork.CommitAsync(); // 2. grava no banco
+            tarefa.Concluir();  // 1. regra de negócio
 
-            // 3. só depois de gravar, avisa os interessados
+            // 2. Com o Outbox, o Publish NÃO envia ao RabbitMQ:
+            //    só "anota" a mensagem no DbContext (tabela OutboxMessage)
             await _eventPublisher.PublishAsync(new TarefaConcluidaEvent(
                 TarefaId: tarefa.Id,
                 ProjetoId: tarefa.ProjetoId,
                 UsuarioId: command.UsuarioId,
                 Titulo: tarefa.Titulo,
                 ConcluidaEmUtc: DateTime.UtcNow));
+
+            // 3. Grava a tarefa E a mensagem na MESMA transação
+            await _unitOfWork.CommitAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,11 @@ namespace TaskFlow.Infrastructure.Data
         {
             // Aplica todas as configurations da mesma assembly automaticamente
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskFlowDbContext).Assembly);
+
+            // Tabelas do Outbox/Inbox do MassTransit
+            modelBuilder.AddInboxStateEntity();
+            modelBuilder.AddOutboxMessageEntity();
+            modelBuilder.AddOutboxStateEntity();
         }
     }
 }
