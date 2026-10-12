@@ -26,7 +26,6 @@ namespace TaskFlow.Worker.Consumers
                 "Recebido TarefaConcluidaEvent | MessageId: {MessageId} | Tarefa {TarefaId} '{Titulo}'",
                 context.MessageId, evento.TarefaId, evento.Titulo);
 
-            // 🛡️ 1ª BARREIRA: esta tarefa já foi notificada?
             var jaNotificada = await _db.Notificacoes
                 .AnyAsync(n => n.TarefaId == evento.TarefaId);
 
