@@ -22,6 +22,36 @@ namespace TaskFlow.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TaskFlow.Domain.Entities.Notificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CriadaEmUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("TarefaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TarefaId")
+                        .IsUnique();
+
+                    b.ToTable("Notificacoes");
+                });
+
             modelBuilder.Entity("TaskFlow.Domain.Entities.Projeto", b =>
                 {
                     b.Property<int>("Id")

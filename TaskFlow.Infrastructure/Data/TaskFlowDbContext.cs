@@ -16,6 +16,8 @@ namespace TaskFlow.Infrastructure.Data
         public DbSet<Projeto> Projetos => Set<Projeto>();
         public DbSet<Tarefa> Tarefas => Set<Tarefa>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
+        public DbSet<Notificacao> Notificacoes => Set<Notificacao>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

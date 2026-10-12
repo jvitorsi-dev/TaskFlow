@@ -15,8 +15,7 @@ namespace TaskFlow.Infrastructure.Configurations
     {
         public static IServiceCollection AddTaskFlowInfrastructure(
             this IServiceCollection services,
-            IConfiguration configuration,
-            Action<IBusRegistrationConfigurator>? configurarConsumers = null)
+            IConfiguration configuration)
         {
             // Banco de dados 
             services.AddDbContext<TaskFlowDbContext>(options =>
@@ -33,6 +32,20 @@ namespace TaskFlow.Infrastructure.Configurations
             services.AddTaskFlowMessaging(configuration);
 
             services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+
+            return services;
+        }
+
+        // NOVO: só a parte de banco (o Worker também vai usar)
+        public static IServiceCollection AddTaskFlowPersistence(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddDbContext<TaskFlowDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTaskFlowRepositories();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
@@ -60,12 +73,22 @@ namespace TaskFlow.Infrastructure.Configurations
                             h.Password(configuration["RabbitMQ:Password"] ?? "guest");
                         });
 
+                    // Retry: se o consumer lançar exceção, tenta de novo após 1s, 5s e 10s
+                    cfg.UseMessageRetry(r =>
+                    {
+                        r.Intervals(
+                            TimeSpan.FromSeconds(1),
+                            TimeSpan.FromSeconds(5),
+                            TimeSpan.FromSeconds(10));
+
+                        // Erros permanentes: tentar de novo não resolve, então vão direto para a _error
+                        r.Ignore<ArgumentException>();
+                    });
+
                     // Cria uma fila para cada consumer registrado e liga essa fila à exchange do evento
                     cfg.ConfigureEndpoints(context);
                 });
             });
-
-            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
 
             return services;
         }
