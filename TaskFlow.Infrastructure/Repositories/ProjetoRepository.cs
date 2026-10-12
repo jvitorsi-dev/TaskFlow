@@ -39,10 +39,10 @@ namespace TaskFlow.Infrastructure.Repositories
             _context.Projetos.Remove(projeto);
         }
 
-        public async Task<Tarefa?> ObterTarefaProjeto(int projetoId, int tarefaId)
+        public async Task<Tarefa?> ObterTarefaProjeto(int projetoId, int tarefaId, int usuarioId)
         {
             return await _context.Projetos
-                .Where(p => p.Id == projetoId)
+                .Where(p => p.Id == projetoId && p.UsuarioId == usuarioId)
                 .SelectMany(p => p.Tarefas)
                 .FirstOrDefaultAsync(t => t.Id == tarefaId);
         }

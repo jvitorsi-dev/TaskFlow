@@ -20,7 +20,7 @@ namespace TaskFlow.Application.Tarefas.UseCases
                 throw new DomainException("O id da tarefa deve ser maior que zero.");
 
             var tarefa = await _projetoRepository.ObterTarefaProjeto(
-                command.ProjetoId, command.TarefaId);
+                command.ProjetoId, command.TarefaId, command.UsuarioId);
 
             if (tarefa is null)
                 throw new DomainException("Tarefa não encontrada.");

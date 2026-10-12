@@ -23,8 +23,8 @@ namespace TaskFlow.Tests.Application.Tarefas
         [Fact]
         public async Task AlterarPrioridadeTarefa_TarefaNaoEncontrada_LancaNotFoundException()
         {
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult<Tarefa>(null));
-            var command = new AlterarPrioridadeTarefaCommand(10, 5, PrioridadeTarefa.Alta);
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult<Tarefa>(null));
+            var command = new AlterarPrioridadeTarefaCommand(10, 5, 1, PrioridadeTarefa.Alta);
 
             await Assert.ThrowsAsync<NotFoundException>(
                 () => _useCase.AlterarPrioridadeTarefa(command));
@@ -37,8 +37,8 @@ namespace TaskFlow.Tests.Application.Tarefas
         public async Task AlterarPrioridadeTarefa_Valido_AtualizaPrioridadeEPersiste(PrioridadeTarefa prioridade)
         {
             var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
-            var command = new AlterarPrioridadeTarefaCommand(10, 5, prioridade);
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult(tarefa));
+            var command = new AlterarPrioridadeTarefaCommand(10, 5, 1, prioridade);
 
             await _useCase.AlterarPrioridadeTarefa(command);
 

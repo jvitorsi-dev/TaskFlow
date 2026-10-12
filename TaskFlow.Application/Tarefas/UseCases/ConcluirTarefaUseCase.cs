@@ -24,7 +24,7 @@ namespace TaskFlow.Application.Tarefas.UseCases
 
         public async Task ExecuteAsync(BuscarTarefaCommand command)
         {
-            var tarefa = await _projetoRepository.ObterTarefaProjeto(command.ProjetoId, command.TarefaId)
+            var tarefa = await _projetoRepository.ObterTarefaProjeto(command.ProjetoId, command.TarefaId, command.UsuarioId)
                 ?? throw new NotFoundException(
                     $"Tarefa com Id {command.TarefaId} não encontrada no projeto {command.ProjetoId}.");
 

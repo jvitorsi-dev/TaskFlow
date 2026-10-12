@@ -148,7 +148,7 @@ namespace TaskFlow.Tests.Infrastructure.Repositories
             {
                 var repository = new ProjetoRepository(contextLeitura);
 
-                var tarefa = await repository.ObterTarefaProjeto(projetoId, tarefaId);
+                var tarefa = await repository.ObterTarefaProjeto(projetoId, tarefaId, 1);
 
                 Assert.NotNull(tarefa);
                 Assert.Equal("Tarefa 1", tarefa.Titulo);
@@ -165,7 +165,7 @@ namespace TaskFlow.Tests.Infrastructure.Repositories
             context.Projetos.Add(projeto);
             await context.SaveChangesAsync();
 
-            var tarefa = await repository.ObterTarefaProjeto(projeto.Id, tarefaId: 999);
+            var tarefa = await repository.ObterTarefaProjeto(projeto.Id, tarefaId: 999, usuarioId: 1);
 
             Assert.Null(tarefa);
         }

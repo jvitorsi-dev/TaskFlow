@@ -27,7 +27,7 @@ namespace TaskFlow.Tests.Application.Tarefas
         [Fact]
         public async Task ExecuteAsync_TarefaNaoEncontrada_LancaNotFoundException()
         {
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult<Tarefa>(null));
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult<Tarefa>(null));
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await Assert.ThrowsAsync<NotFoundException>(() => _useCase.ExecuteAsync(command));
@@ -40,7 +40,7 @@ namespace TaskFlow.Tests.Application.Tarefas
         {
             var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
             tarefa.Iniciar();
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult(tarefa));
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await _useCase.ExecuteAsync(command);
@@ -53,7 +53,7 @@ namespace TaskFlow.Tests.Application.Tarefas
         public async Task ExecuteAsync_TarefaPendente_LancaDomainException()
         {
             var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult(tarefa));
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await Assert.ThrowsAsync<DomainException>(() => _useCase.ExecuteAsync(command));
@@ -68,7 +68,7 @@ namespace TaskFlow.Tests.Application.Tarefas
         {
             var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
             tarefa.Iniciar();
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult(tarefa));
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await _useCase.ExecuteAsync(command);
@@ -83,7 +83,7 @@ namespace TaskFlow.Tests.Application.Tarefas
         {
             var tarefa = new Tarefa("Tarefa 1", "Descrição da tarefa", PrioridadeTarefa.Media);
             tarefa.Iniciar();
-            _projetoRepository.ObterTarefaProjeto(10, 5).Returns(Task.FromResult(tarefa));
+            _projetoRepository.ObterTarefaProjeto(10, 5, 1).Returns(Task.FromResult(tarefa));
             var command = new BuscarTarefaCommand(UsuarioId: 1, ProjetoId: 10, TarefaId: 5);
 
             await _useCase.ExecuteAsync(command);

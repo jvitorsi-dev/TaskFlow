@@ -11,6 +11,6 @@ namespace TaskFlow.Domain.Repositories
         Task<IEnumerable<Projeto>> ListarTodosAsync();
         Task EditarAsync(Projeto projeto);
         Task ExcluirAsync(Projeto projeto);
-        Task<Tarefa?> ObterTarefaProjeto(int projetoId, int tarefaId);
+        Task<Tarefa?> ObterTarefaProjeto(int projetoId, int tarefaId, int usuarioId);
     }
 }

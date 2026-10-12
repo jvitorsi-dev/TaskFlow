@@ -9,6 +9,7 @@ namespace TaskFlow.Application.Tarefas.Commands
     (
         int ProjetoId,
         int TarefaId,
+        int UsuarioId,  
         PrioridadeTarefa Prioridade
     );
 }
