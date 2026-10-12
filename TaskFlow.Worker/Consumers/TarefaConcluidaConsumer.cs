@@ -58,7 +58,6 @@ namespace TaskFlow.Worker.Consumers
             _logger.LogInformation(
                 "Notificacao criada para o usuario {UsuarioId} | Tarefa {TarefaId}.",
                 evento.UsuarioId, evento.TarefaId);
-
         }
     }
 }
