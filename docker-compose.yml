@@ -11,7 +11,7 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-      - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro   # ← NOVO
+      - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro  
 
 
 volumes:

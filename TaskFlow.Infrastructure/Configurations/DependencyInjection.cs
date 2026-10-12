@@ -14,29 +14,14 @@ namespace TaskFlow.Infrastructure.Configurations
     public static class DependencyInjection
     {
         public static IServiceCollection AddTaskFlowInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        this IServiceCollection services,
+        IConfiguration configuration)
         {
-            // Banco de dados 
-            services.AddDbContext<TaskFlowDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")));
-
-            // Repositórios 
-            services.AddTaskFlowRepositories();
-
-            // UnitOfWork
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            // Mensageria (MassTransit + RabbitMQ)
+            services.AddTaskFlowPersistence(configuration);
             services.AddTaskFlowMessaging(configuration);
-
-            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
-
             return services;
         }
 
-        // NOVO: só a parte de banco (o Worker também vai usar)
         public static IServiceCollection AddTaskFlowPersistence(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -89,6 +74,8 @@ namespace TaskFlow.Infrastructure.Configurations
                     cfg.ConfigureEndpoints(context);
                 });
             });
+
+            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
 
             return services;
         }
